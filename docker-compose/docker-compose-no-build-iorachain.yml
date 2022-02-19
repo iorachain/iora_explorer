@@ -16,9 +16,6 @@ services:
     depends_on:
       - db
     image: blockscout/blockscout:${DOCKER_TAG:-latest}
-    build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
     restart: always
     container_name: 'blockscout'
     links:
@@ -28,6 +25,11 @@ services:
       - 'host.docker.internal:host-gateway'
     env_file:
       -  ./envs/common-blockscout.env
+    environment:
+        ETHEREUM_JSONRPC_VARIANT: 'iorachain'
+        ETHEREUM_JSONRPC_HTTP_URL: https://dataseed.iorachain.com
+        ETHEREUM_JSONRPC_WS_URL: ws://dataseed.iorachain.com
+        DATABASE_URL: postgresql://postgres:@host.docker.internal:7432/blockscout?ssl=false
     ports:
       - 4000:4000
 
